@@ -12,8 +12,6 @@ To convert shp file to svg run shp2svg with arguments:
 
 **Note**: Regions file should be called "Regions.json" and located in the same directory with shapefile.
 
-Utility will generate .svg file for every .shp file in specified catalog.
-
 ### Example
 * shp2svg -p c:\Users\Polyakova\Downloads\DZA_adm -a name_2
 * shp2svg -p c:\Users\Polyakova\Downloads\DZA_adm\DZA_adm2.shp -a name_2
