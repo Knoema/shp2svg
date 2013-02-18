@@ -1,7 +1,6 @@
 shp2svg
 =======
 Shapefile to SVG converter tool
-=======
 
 To convert shp file to svg run shp2svg with arguments:
 * -p, required, path to the shapefile 
