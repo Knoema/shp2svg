@@ -4,6 +4,6 @@
     <ProjectView>ShowAllFiles</ProjectView>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <StartArguments>-p c:\Users\Polyakova\Downloads\DZA_adm  -a "name_1" -w 300 -h 200 -m</StartArguments>
+    <StartArguments>-p c:\Users\Polyakova\Downloads\DZA_adm\%2aadm1.shp  -a "name_1" -w 300 -h 200 -m</StartArguments>
   </PropertyGroup>
 </Project>

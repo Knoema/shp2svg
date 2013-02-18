@@ -8,4 +8,3 @@ C:\Users\Polyakova\Documents\Visual Studio 2012\Projects\shp2svg\shp2svg\shp2svg
 C:\Users\Polyakova\Documents\Visual Studio 2012\Projects\shp2svg\shp2svg\shp2svg\bin\Debug\Newtonsoft.Json.xml
 C:\Users\Polyakova\Documents\Visual Studio 2012\Projects\shp2svg\shp2svg\shp2svg\bin\Debug\CommandLine.dll
 C:\Users\Polyakova\Documents\Visual Studio 2012\Projects\shp2svg\shp2svg\shp2svg\bin\Debug\CommandLine.xml
-C:\Users\Polyakova\Documents\Visual Studio 2012\Projects\shp2svg\shp2svg\shp2svg\obj\Debug\shp2svg.csprojResolveAssemblyReference.cache

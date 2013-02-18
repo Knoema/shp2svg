@@ -17,7 +17,7 @@ namespace shp2svg
 			else
 			{
 				Logger.Init(Path.GetDirectoryName(options.Path));
-
+				
 				var filePaths = Helper.ShpFilePaths(options.Path).ToList();
 
 				filePaths.ForEach(fp =>
