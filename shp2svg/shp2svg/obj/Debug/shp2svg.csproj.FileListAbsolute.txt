@@ -1,0 +1,11 @@
+C:\Users\Polyakova\Documents\Visual Studio 2012\Projects\shp2svg\shp2svg\shp2svg\bin\Debug\shp2svg.exe.config
+C:\Users\Polyakova\Documents\Visual Studio 2012\Projects\shp2svg\shp2svg\shp2svg\bin\Debug\shp2svg.exe
+C:\Users\Polyakova\Documents\Visual Studio 2012\Projects\shp2svg\shp2svg\shp2svg\bin\Debug\shp2svg.pdb
+C:\Users\Polyakova\Documents\Visual Studio 2012\Projects\shp2svg\shp2svg\shp2svg\obj\Debug\shp2svg.exe
+C:\Users\Polyakova\Documents\Visual Studio 2012\Projects\shp2svg\shp2svg\shp2svg\obj\Debug\shp2svg.pdb
+C:\Users\Polyakova\Documents\Visual Studio 2012\Projects\shp2svg\shp2svg\shp2svg\bin\Debug\Catfood.Shapefile.dll
+C:\Users\Polyakova\Documents\Visual Studio 2012\Projects\shp2svg\shp2svg\shp2svg\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Polyakova\Documents\Visual Studio 2012\Projects\shp2svg\shp2svg\shp2svg\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Polyakova\Documents\Visual Studio 2012\Projects\shp2svg\shp2svg\shp2svg\bin\Debug\CommandLine.dll
+C:\Users\Polyakova\Documents\Visual Studio 2012\Projects\shp2svg\shp2svg\shp2svg\bin\Debug\CommandLine.xml
+C:\Users\Polyakova\Documents\Visual Studio 2012\Projects\shp2svg\shp2svg\shp2svg\obj\Debug\shp2svg.csprojResolveAssemblyReference.cache
