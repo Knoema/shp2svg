@@ -16,10 +16,6 @@ Utility will generate .svg file for every .shp file in specified catalog.
 
 ### Example
 * shp2svg -p c:\Users\Polyakova\Downloads\DZA_adm -a name_2
-Will generate svg files for each shp file in DZA_adm catalog.
-
 * shp2svg -p c:\Users\Polyakova\Downloads\DZA_adm\DZA_adm2.shp -a name_2
-Wll generate DZA_adm2.svg file.
-
 * shp2svg -p c:\Users\Polyakova\Downloads\DZA_adm -a name_2 -w 400 -h 150 -t 4
 
