@@ -6,7 +6,7 @@ To convert shp file to svg run shp2svg with arguments:
 * -p, required, path to the shapefile or catalog with shapefiles 
 * -a, required, name of shapefile metadata attribute to find matching id
 * -w, optional, width of svg, default value is 900
-* -h, optional, height of cvg, default value if 600
+* -h, optional, height of svg, default value if 600
 * -t, optional, tolerance of smoothing, default value is 3. Min value 1
 * -m, optional, generate file with shapefile metadata.
 
