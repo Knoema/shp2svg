@@ -17,14 +17,26 @@ namespace shp2svg
 			else
 			{
 				Logger.Init(Path.GetDirectoryName(options.Path));
-				
-				var filePaths = Helper.ShpFilePaths(options.Path).ToList();
 
+				Projection projection;
+
+				switch (options.Projection)
+				{
+ 					case "EPSG:3857":
+						projection = new SphericalMercator();
+						break;
+					default:
+						projection = new Mercator();
+						break;
+				};
+				
+
+				var filePaths = Helper.ShpFilePaths(options.Path).ToList();
 				filePaths.ForEach(fp =>
 				{
-					var svgWriter = new SvgWriter();
+					var svgWriter = new SvgWriter(fp, options.Width, options.Height, options.Tolerance, options.Attr, projection);
 
-					svgWriter.CreateSVG(fp, options.Width, options.Height, options.Attr, options.Tolerance);
+					svgWriter.CreateSVG();
 
 					if (options.Meta)
 						svgWriter.GetMetadata(fp);

@@ -11,6 +11,23 @@ namespace shp2svg
 {
 	class SvgWriter
 	{
+		string _path;
+		int _width;
+		int _height;
+		int _tolerance;
+		Projection _projection;
+		string _attr;
+
+		public SvgWriter(string path, int width, int height, int tolerance, string attr, Projection projection)
+		{
+			_path = path;
+			_width = width;
+			_height = height;
+			_tolerance = tolerance;
+			_attr = attr;
+			_projection = projection;
+		}
+
 		public List<string> Log { private set; get; }
 
 		public void GetMetadata(string path)
@@ -20,19 +37,39 @@ namespace shp2svg
 				var stringBuilder = new StringBuilder();
 
 				var i = 0;
-				foreach (Shape shape in shapefile)			
-				{
-					if (i == 0)
+				foreach (Shape shape in shapefile)					
+					if (shape.Type == ShapeType.Polygon)
 					{
-						stringBuilder.AppendLine(string.Join(", ", shape.GetMetadataNames()));
-						i++;
-					}
+						if (i == 0)
+						{
+							stringBuilder.AppendLine(string.Join(", ", shape.GetMetadataNames()));
+							i++;
+						}
 
-					stringBuilder.AppendLine(string.Join(", ", shape.GetMetadataNames().Select(p => shape.GetMetadata(p))));
-				}
+						stringBuilder.AppendLine(string.Join(", ", shape.GetMetadataNames().Select(p => shape.GetMetadata(p))));
+					}				
 
 				File.WriteAllText(Helper.GetFilePath(path, ".csv"), stringBuilder.ToString());
 			}
+		}
+
+		bool CompareRegions(string region1, string region2)
+		{
+			region1 = region1.ToUpperInvariant().Trim();
+			region2 = region2.ToUpperInvariant().Trim();
+
+			var count = 0;
+
+			for (var i = 0; i < Math.Min(region1.Length, region2.Length); i++)
+			{
+				if (region1[i] == region2[i])
+					count++;
+			}
+
+			if ((double)count / region1.Length > 0.9)
+				return true;
+
+			return false;
 		}
 
 		string GetId(string name, params Region[] regions)
@@ -59,17 +96,17 @@ namespace shp2svg
 				}
 
 			return id;
-		}
+		}		
 
-		public void CreateSVG(string path, int width, int height, string attr, int tolerance)
+		public void CreateSVG()
 		{
-			if (!File.Exists(path))
+			if (!File.Exists(_path))
 			{
-				LogMessage(string.Format("File does not exist. Path: {0}", path));
+				LogMessage(string.Format("File does not exist. Path: {0}", _path));
 				return;
 			}
 
-			var regionsPath = Path.Combine(Path.GetDirectoryName(path), "regions.json");
+			var regionsPath = Path.Combine(Path.GetDirectoryName(_path), "regions.json");
 			if (!File.Exists(regionsPath))
 			{
 				LogMessage(string.Format("Regions file does not exist. Path: {0}", regionsPath));
@@ -78,20 +115,20 @@ namespace shp2svg
 
 			var regions = JsonConvert.DeserializeObject<Region>(File.ReadAllText(regionsPath));
 
-			using (Shapefile shapefile = new Shapefile(path))
+			using (Shapefile shapefile = new Shapefile(_path))
 			{
-				LogMessage(string.Format("Start Create SVG for: {0}", Path.GetFileName(path)));
+				LogMessage(string.Format("Start Create SVG for: {0}", Path.GetFileName(_path)));
 
 				var scale = Math.Max(
-					Math.Abs(Mercator.lonToX(shapefile.BoundingBox.Left) - Mercator.lonToX(shapefile.BoundingBox.Right)) / width,
-					Math.Abs(Mercator.latToY(shapefile.BoundingBox.Top) - Mercator.latToY(shapefile.BoundingBox.Bottom)) / height
+					Math.Abs(_projection.lonToX(shapefile.BoundingBox.Left) - _projection.lonToX(shapefile.BoundingBox.Right)) / _width,
+					Math.Abs(_projection.latToY(shapefile.BoundingBox.Top) - _projection.latToY(shapefile.BoundingBox.Bottom)) /_height
 				);
 
-				using (var writer = XmlWriter.Create(Helper.GetFilePath(path, ".svg"), new XmlWriterSettings() { Indent = true }))
+				using (var writer = XmlWriter.Create(Helper.GetFilePath(_path, ".svg"), new XmlWriterSettings() { Indent = true }))
 				{
 					writer.WriteStartElement("svg", "http://www.w3.org/2000/svg");
 					writer.WriteAttributeString("id", "svgmapid");
-					writer.WriteAttributeString("viewBox", string.Format("0 0 {0} {1}", width, height));
+					writer.WriteAttributeString("viewBox", string.Format("0 0 {0} {1}", _width, _height));
 					writer.WriteAttributeString("fill", "transparent");
 					writer.WriteAttributeString("stroke", "gray");
 					writer.WriteAttributeString("stroke-width", "0.3");
@@ -101,8 +138,8 @@ namespace shp2svg
 					foreach (Shape shape in shapefile)
 						if (shape.Type == ShapeType.Polygon)
 						{
-							var region = shape.GetMetadata(attr);
-							var id = GetId(region, regions);						
+							var region = shape.GetMetadata(_attr);
+							var id = GetId(region, regions);
 
 							foreach (PointD[] part in (shape as ShapePolygon).Parts)
 							{
@@ -114,23 +151,23 @@ namespace shp2svg
 									failedRegions.Add(region);
 									writer.WriteAttributeString("region", region);
 								}
-								
+
 								var coords = new List<List<double>>();
 								for (int i = 0; i < part.Length; i++)
 									coords.Add(new List<double>() { part[i].X, part[i].Y });
 
-								coords = Helper.SimplifyCoordinates(coords, tolerance);
+								coords = Helper.SimplifyCoordinates(coords, _tolerance);
 
 								var stringBuilder = new StringBuilder();
 
 								for (int i = 0; i < coords.Count; i++)
-									 stringBuilder.Append(string.Format("{0} {1} {2} {3}",
-											i == 0 ? "M" : "L",
-											(Mercator.lonToX(coords[i][0]) - Mercator.lonToX(shapefile.BoundingBox.Left)) / scale,
-											(-Mercator.latToY(coords[i][1]) + Mercator.latToY(shapefile.BoundingBox.Bottom)) / scale,
-											i == coords.Count - 1 ? "Z" : string.Empty
-										)
-									);
+									stringBuilder.Append(string.Format("{0} {1} {2} {3}",
+										   i == 0 ? "M" : "L",
+										   (_projection.lonToX(coords[i][0]) - _projection.lonToX(shapefile.BoundingBox.Left)) / scale,
+										   (-_projection.latToY(coords[i][1]) + _projection.latToY(shapefile.BoundingBox.Bottom)) / scale,
+										   i == coords.Count - 1 ? "Z" : string.Empty
+									   )
+								   );
 
 								writer.WriteAttributeString("d", stringBuilder.ToString());
 								writer.WriteEndElement();
@@ -141,13 +178,14 @@ namespace shp2svg
 					writer.Flush();
 					writer.Close();
 
-					if(failedRegions.Count > 0)
-						LogMessage(string.Format("Unable to match id for region: {0}", string.Join(", ", failedRegions.Distinct())));	
+					if (failedRegions.Count > 0)
+						LogMessage(string.Format("Unable to match id for region: {0}", string.Join(", ", failedRegions.Distinct())));
 
-					LogMessage(string.Format("End Create SVG for: {0}{1}", Path.GetFileName(path), Environment.NewLine));
+					LogMessage(string.Format("End Create SVG for: {0}{1}", Path.GetFileName(_path), Environment.NewLine));
 				}
-			}			
-		}
+			}
+		}		
+		
 
 		void LogMessage(string message)
 		{

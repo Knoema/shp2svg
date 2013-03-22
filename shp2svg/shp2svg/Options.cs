@@ -45,5 +45,8 @@ namespace shp2svg
 
 		[Option("t", "tolerance", DefaultValue = 3, HelpText = "Tolerance of simplification")]
 		public int Tolerance { get; set; }
+
+		[Option("r", "proj", DefaultValue = "EPSG:3395", HelpText = "Projection")]
+		public string Projection { get; set; }
 	}
 }
